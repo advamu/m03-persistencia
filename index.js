@@ -18,14 +18,36 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/user", async (req, res) => {
-console.log('req.body')
+console.log(req.body)
 
 const user = await User.create({
   username: req.body.username,
   password: req.body.password,
 })
 
-return res.send("")
+return res.send(user)
+})
+
+app.get("/user", async (req, res) => {
+  console.log(req.body)
+  
+const user = await User.findOne({
+  username: req.body.username,
+  password: req.body.password,
+})
+  
+return res.send(user)
+})
+
+app.delete("/user", async (req, res) => {
+  console.log(req.body)
+
+const user = await User.deleteOne({
+  username: req.body.username,
+  password: req.body.password,
+})
+    
+return res.send(user)
 })
 
 app.listen(port, async () => {
@@ -34,7 +56,7 @@ app.listen(port, async () => {
 });
 
 process.on("SIGINT", function () {
-  disconnectDB().then(() => {
+  disconnect().then(() => {
     server.close(function () {
       console.log("closed connection");
       process.exit(0);
