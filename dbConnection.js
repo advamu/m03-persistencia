@@ -22,4 +22,10 @@ const getConnection = async () => {
   return mongoConnection;
 };
 
-module.exports = { getConnection };
+const disconnectDB = async () => {
+  if (mongoConnection) {
+    await mongoose.connection.close();
+  }
+};
+
+module.exports = { getConnection, disconnectDB };
