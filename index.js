@@ -9,12 +9,18 @@ const { body, validationResult } = require('express-validator');
 app.use(express.json())
 
 const User = require("./model/user.model");
+const userRouter  = require("./route/user.route")
+const loginRouter = require("./route/auth.route")
+const authMiddleware = require("./middleware/auth.middleware")
+
+app.use("/user", authMiddleware, userRouter)
+app.use("/auth", loginRouter)
 
 app.get("/", async (req, res) => {
   const connection = await getConnection();
   const dbRes = await User.find({});
   console.log(dbRes);
-  return res.send("Hello World!");
+  return res.send("Hello human");
 });
 
 app.post("/user", async (req, res) => {
@@ -22,14 +28,8 @@ console.log(req.body)
 
 const user = await User.create({
   username: req.body.username,
-  password: req.body.password,
-},
-  body('username', 'Usuariii')
-  .exists(),
-  body('password', 'Passwooord')
-  .exists() 
-)
-
+  password: req.body.password
+})
 return res.send(user)
 })
 
@@ -38,13 +38,7 @@ app.get("/user", async (req, res) => {
   
 const user = await User.findOne({
   username: req.body.username,
-  password: req.body.password,
-},
-  body('username', 'Usuariii')
-  .exists(),
-  body('password', 'Passwooord')
-  .exists())
-  
+}) 
 return res.send(user)
 })
 
@@ -53,13 +47,7 @@ app.delete("/user", async (req, res) => {
 
 const user = await User.deleteOne({
   username: req.body.username,
-  password: req.body.password,
-},
-  body('username', 'Usuariii')
-  .exists(),
-  body('password', 'Passwooord')
-  .exists())
-    
+})
 return res.send(user)
 })
 

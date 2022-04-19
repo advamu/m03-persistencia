@@ -10,8 +10,14 @@ const connectDB = async () => {
   const host = process.env.MONGODB_HOST;
   const port = process.env.MONGODB_PORT;
   const database = process.env.MONGODB_DATABASE;
+  let connectionString = ``;
 
-  const connectionString = `mongodb://${username}:${password}@${host}:${port}/${database}`;
+if(port){
+   connectionString = `mongodb://${username}:${password}@${host}:${port}/${database}`;
+}
+else {
+    connectionString = `mongodb+srv://${username}:${password}@${host}/${database}?retryWrites=true&w=majority`;
+}
   return await mongoose.connect(connectionString);
 };
 
